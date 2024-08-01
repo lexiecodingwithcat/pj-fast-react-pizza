@@ -6,6 +6,7 @@ import CreateOrder from "./features/order/CreateOrder";
 import Order from "./features/order/Order";
 import AppLayout from "./ui/AppLayout";
 
+
 const router = createBrowserRouter([
   //we create an array and passing objects into the array
   //each object is one route

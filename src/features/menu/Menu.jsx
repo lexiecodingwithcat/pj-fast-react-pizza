@@ -5,7 +5,7 @@ import MenuItem from "./MenuItem";
 function Menu() {
   //use the loader data
   const menu = useLoaderData();
-  console.log(menu);
+  
   return (
     <ul>
       {menu.map((pizza) => (
