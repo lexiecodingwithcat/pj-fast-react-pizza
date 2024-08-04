@@ -6,7 +6,7 @@ import { createOrder } from "../../services/apiRestaurant";
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
-    str
+    str,
   );
 
 const fakeCart = [
@@ -38,8 +38,8 @@ function CreateOrder() {
   const cart = fakeCart;
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
-// we can get access to whatever return from the action function 
-//in case there is no submission
+  // we can get access to whatever return from the action function
+  //in case there is no submission
   const formErrors = useActionData();
   return (
     <div>
@@ -79,7 +79,10 @@ function CreateOrder() {
         <div>
           {/* we use this hidden input to pass the cart data to action function since it is part of form */}
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-          <button disabled={isSubmitting}>
+          <button
+            disabled={isSubmitting}
+            className="inline-block rounded-full bg-yellow-400 px-4 py-3 font-semibold uppercase tracking-wide text-stone-800 transition-colors duration-300 hover:bg-yellow-300 focus:outline-none focus:ring focus:ring-yellow-300 focus:ring-offset-2 disabled:cursor-not-allowed"
+          >
             {isSubmitting ? "Placing order..." : "Order now"}
           </button>
         </div>
@@ -103,7 +106,7 @@ export async function action({ request }) {
   //check whether the phone number is valid or not
   const errors = {};
   if (!isValidPhone(order.phone))
-  //we add phone property to the error object
+    //we add phone property to the error object
     errors.phone =
       "Please give us your correct phone number. We may need it to contact you.";
   if (Object.keys(errors).length > 0) return errors;

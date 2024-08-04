@@ -17,7 +17,7 @@ function AppLayout() {
       <Header />
       <div className="overflow-scroll ">
         {/*  we can use margin left and right set to auto to place it in the middle */}
-        <main className="mx-auto max-w-3xl bg-red-800 ">
+        <main className="mx-auto max-w-3xl">
           {/*  we want the main content changes based on current route */}
           {/* Outlet is like a placeholdre taht allows browser to render child routes inside its parent route  */}
           {isLoading ? <Loader /> : <Outlet />}
