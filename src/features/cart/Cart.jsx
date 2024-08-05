@@ -15,7 +15,7 @@ function Cart() {
 
       <div>
         
-        <Button to="/order/new">Order pizzas</Button>
+        <Button to="/order/new" type="primary">Order pizzas</Button>
         <Button>Clear Cart</Button>
       </div>
     </div>
