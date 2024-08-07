@@ -1,6 +1,11 @@
 // import { useState } from "react";
 
-import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
+import {
+  Form,
+  redirect,
+  useActionData,
+  useNavigation,
+} from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
 
@@ -38,35 +43,66 @@ function CreateOrder() {
   // const [withPriority, setWithPriority] = useState(false);
   const cart = fakeCart;
   const navigation = useNavigation();
-  const isSubmitting = navigation.state === "submitting";
+  const isSubmitting =
+    navigation.state === "submitting";
   // we can get access to whatever return from the action function
   //in case there is no submission
   const formErrors = useActionData();
   return (
-    <div>
-      <h2>Ready to order? Lets go!</h2>
+    <div className="px-4 py-6">
+      <h2 className="mb-8 text-xl font-semibold">
+        Ready to order? Lets go!
+      </h2>
       {/* action will be the path that this form will be submitted to  */}
       <Form method="POST" action="/order/new">
-        <div>
-          <label>First Name</label>
-          <input type="text" name="customer" required className="input" />
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          {/* basis is the original size of the box */}
+          {/* if there is no basis then it will be auto: the original size of the content */}
+          <label className="sm:basis-40">
+            First Name
+          </label>
+          <input
+            type="text"
+            name="customer"
+            required
+            className="input"
+          />
         </div>
 
         <div>
-          <label>Phone number</label>
-          <div>
-            <input type="tel" name="phone" required className="input" />
+          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+            <label className="sm:basis-40">
+              Phone number
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              required
+              className="input"
+            />
           </div>
-        </div>
-        {formErrors?.phone && <p>{formErrors.phone}</p>}
-        <div>
-          <label>Address</label>
-          <div>
-            <input type="text" name="address" required className="input" />
-          </div>
+          {formErrors?.phone && (
+            <p className="mb-2 text-xs mt-1 text-red-600 sm:mb-4 sm:mt-2 sm:text-sm">
+              {formErrors.phone}
+            </p>
+          )}
         </div>
 
         <div>
+          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+            <label className="sm:basis-40">
+              Address
+            </label>
+            <input
+              type="text"
+              name="address"
+              required
+              className="input"
+            />
+          </div>
+        </div>
+
+        <div className="mb-12 flex items-center gap-4">
           <input
             type="checkbox"
             name="priority"
@@ -75,15 +111,30 @@ function CreateOrder() {
             // onChange={(e) => setWithPriority(e.target.checked)}
             className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2"
           />
-          <label htmlFor="priority">Want to yo give your order priority?</label>
+          <label
+            htmlFor="priority"
+            className="font-medium"
+          >
+            Want to yo give your order priority?
+          </label>
         </div>
 
         <div>
           {/* we use this hidden input to pass the cart data to action function since it is part of form */}
-          <input type="hidden" name="cart" value={JSON.stringify(cart)} />
-         
-         <Button disabled={isSubmitting} type="primary">{isSubmitting ? "Placing order..." : "Order now"}</Button>
-          
+          <input
+            type="hidden"
+            name="cart"
+            value={JSON.stringify(cart)}
+          />
+
+          <Button
+            disabled={isSubmitting}
+            type="primary"
+          >
+            {isSubmitting
+              ? "Placing order..."
+              : "Order now"}
+          </Button>
         </div>
       </Form>
     </div>
@@ -108,7 +159,8 @@ export async function action({ request }) {
     //we add phone property to the error object
     errors.phone =
       "Please give us your correct phone number. We may need it to contact you.";
-  if (Object.keys(errors).length > 0) return errors;
+  if (Object.keys(errors).length > 0)
+    return errors;
 
   const newOrder = await createOrder(order);
   //here we need to redirect to the order/:orderId page
