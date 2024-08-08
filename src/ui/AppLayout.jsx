@@ -25,7 +25,7 @@ function AppLayout() {
           {/*  we want the main content changes based on current route */}
           {/* Outlet is like a placeholdre taht allows browser to render child routes inside its parent route  */}
           {isLoading ? <Loader /> : <Outlet />}
-          {/* {true && <Loader />} */}
+         
         </main>
       </div>
       <CartOverview />
