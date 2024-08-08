@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 
-import Button from "../../ui/Button";
-import { formatCurrency } from "../../utils/helpers";
+import { useDispatch } from "react-redux";
+import { formatCurrency } from "../../utils/helpers.js";
+
+import DeleteItem from "./DeleteItem.jsx";
+
 function CartItem({ item }) {
   const { pizzaId, name, quantity, totalPrice } =
     item;
 
-  function handleDelteItem() {}
   return (
     <li className="sm: items-center py-3 sm:flex sm:justify-between">
       <p className="mb-1 sm:mb-0">
@@ -17,7 +19,7 @@ function CartItem({ item }) {
         <p className="text-sm font-bold">
           {formatCurrency(totalPrice)}
         </p>
-        <Button type="small">Delete</Button>
+        <DeleteItem pizzaId={pizzaId} />
       </div>
     </li>
   );

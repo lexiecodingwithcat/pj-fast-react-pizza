@@ -1,7 +1,14 @@
 import { formatCurrency } from "../../utils/helpers";
 import Button from "../../ui/Button";
-import { useDispatch } from "react-redux";
-import { addItem } from "../cart/cartSlice";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
+import {
+  addItem,
+  getCurrentQuantityById,
+} from "../cart/cartSlice";
+import DeleteItem from "../cart/DeleteItem";
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 function MenuItem({ pizza }) {
@@ -14,15 +21,21 @@ function MenuItem({ pizza }) {
     imageUrl,
   } = pizza;
   const dispatch = useDispatch();
+
+  const currentQuantity = useSelector(
+    //a getCurrentQuantityById will return another useSelector function with state as prama
+    getCurrentQuantityById(id),
+  );
+  const isInCart = currentQuantity > 0;
   function handleAddToCart() {
-    const newItem={
+    const newItem = {
       pizzaId: id,
       name,
       quantity: 1,
       unitPrice,
       totalPrice: unitPrice,
-    }
-    
+    };
+
     dispatch(addItem(newItem));
   }
   return (
@@ -47,7 +60,12 @@ function MenuItem({ pizza }) {
               Sold out
             </p>
           )}
-          {!soldOut && (
+          {/* only the pizza is in the cart, we present the delete button */}
+          {isInCart && (
+            <DeleteItem pizzaId={id} />
+          )}
+          {/* we only want to disply the add button when pizza is not sold out and is not in cart */}
+          {!soldOut && !isInCart && (
             <Button
               type="small"
               onclick={handleAddToCart}

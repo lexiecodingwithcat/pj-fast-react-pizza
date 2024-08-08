@@ -64,3 +64,14 @@ export const getTotalCartPrice = (state) =>
     0,
   );
 export const getCart = (state) => state.cart.cart;
+// we need another function to get the quantity of each pizza
+export const getCurrentQuantityById =
+  //  we pass id and then return the useSelector function -- a new arrow function
+  //if we write (id, state) redux is unable to receive data
+  (id) => (state) =>
+    state.cart.cart.find(
+      (item) => item.pizzaId === id,
+      //if there is quantity return quantity
+      // if id is undefined or null, return undefined 
+      //if the ?? left is null or undefined then return 0
+    )?.quantity ?? 0;
