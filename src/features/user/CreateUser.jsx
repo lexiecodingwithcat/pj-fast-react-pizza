@@ -1,30 +1,46 @@
 import { useState } from "react";
 import Button from "../../ui/Button";
+import { useDispatch } from "react-redux";
+import { updateName } from "./userSlice";
+import { useNavigate } from "react-router-dom";
 
 function CreateUser() {
+  // we should have a local state and change the global state when the form is submitted
   const [username, setUsername] = useState("");
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   function handleSubmit(e) {
     e.preventDefault();
+    if (!username) return;
+    dispatch(updateName(username));
+    //after get the name from the user
+    // navigate to menu
+    navigate("/menu");
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <p className="mb-4 text-sm md:text-base">
-        👋 Welcome! Please start by telling us your name:
+        👋 Welcome! Please start by telling us
+        your name:
       </p>
 
       <input
         type="text"
         placeholder="Your full name"
         value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="w-72 input mb-8"
+        onChange={(e) =>
+          setUsername(e.target.value)
+        }
+        className="input mb-8 w-72"
       />
 
       {username !== "" && (
         <div>
-          <Button type="primary">Start ordering</Button>
+          <Button type="primary">
+            Start ordering
+          </Button>
         </div>
       )}
     </form>
