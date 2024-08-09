@@ -61,6 +61,7 @@ function MenuItem({ pizza }) {
             </p>
           )}
           {/* only the pizza is in the cart, we present the delete button */}
+          
           {isInCart && (
             <DeleteItem pizzaId={id} />
           )}
