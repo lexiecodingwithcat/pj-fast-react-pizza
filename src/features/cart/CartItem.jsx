@@ -1,15 +1,22 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 
-import { useDispatch } from "react-redux";
+import {
+  useDispatch,
+  useSelector,
+} from "react-redux";
 import { formatCurrency } from "../../utils/helpers.js";
 
 import DeleteItem from "./DeleteItem.jsx";
 import UpdateItemQuantity from "./UpdateItemQuantity.jsx";
+import { getCurrentQuantityById } from "./cartSlice.js";
 
 function CartItem({ item }) {
   const { pizzaId, name, quantity, totalPrice } =
     item;
+  const currentQuantity = useSelector(
+    getCurrentQuantityById(pizzaId),
+  );
 
   return (
     <li className="sm: items-center py-3 sm:flex sm:justify-between">
@@ -20,7 +27,10 @@ function CartItem({ item }) {
         <p className="text-sm font-bold">
           {formatCurrency(totalPrice)}
         </p>
-        <UpdateItemQuantity pizzaId={pizzaId} />
+        <UpdateItemQuantity
+          pizzaId={pizzaId}
+          currentQuantity={currentQuantity}
+        />
         <DeleteItem pizzaId={pizzaId} />
       </div>
     </li>

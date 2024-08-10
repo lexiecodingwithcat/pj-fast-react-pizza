@@ -9,6 +9,7 @@ import {
   getCurrentQuantityById,
 } from "../cart/cartSlice";
 import DeleteItem from "../cart/DeleteItem";
+import UpdateItemQuantity from "../cart/UpdateItemQuantity";
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 function MenuItem({ pizza }) {
@@ -61,9 +62,12 @@ function MenuItem({ pizza }) {
             </p>
           )}
           {/* only the pizza is in the cart, we present the delete button */}
-          
+
           {isInCart && (
-            <DeleteItem pizzaId={id} />
+            <div className="flex gap-3 items-center sm:gap-8">
+              <UpdateItemQuantity currentQuantity={currentQuantity} pizzaId={id}/>
+              <DeleteItem pizzaId={id} />
+            </div>
           )}
           {/* we only want to disply the add button when pizza is not sold out and is not in cart */}
           {!soldOut && !isInCart && (

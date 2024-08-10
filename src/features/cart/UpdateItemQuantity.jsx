@@ -8,7 +8,7 @@ import {
 } from "./cartSlice";
 /*eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-function UpdateItemQuantity({ pizzaId }) {
+function UpdateItemQuantity({ pizzaId, currentQuantity }) {
   const dispatch = useDispatch();
 
   return (
@@ -21,6 +21,7 @@ function UpdateItemQuantity({ pizzaId }) {
       >
         -
       </Button>
+  <span className="text-sm font-medium">{currentQuantity}</span>
       <Button
         type="round"
         onclick={() =>
