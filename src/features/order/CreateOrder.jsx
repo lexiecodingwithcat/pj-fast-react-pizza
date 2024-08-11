@@ -1,5 +1,3 @@
-// import { useState } from "react";
-
 import {
   Form,
   redirect,
@@ -7,8 +5,17 @@ import {
   useNavigation,
 } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
+import EmptyCart from "../cart/EmptyCart";
 import Button from "../../ui/Button";
 import { useSelector } from "react-redux";
+import {
+  clearCart,
+  getCart,
+  getTotalCartPrice,
+} from "../cart/cartSlice";
+import store from "../../store";
+import { formatCurrency } from "../../utils/helpers";
+import { useState } from "react";
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -16,33 +23,12 @@ const isValidPhone = (str) =>
     str,
   );
 
-const fakeCart = [
-  {
-    pizzaId: 12,
-    name: "Mediterranean",
-    quantity: 2,
-    unitPrice: 16,
-    totalPrice: 32,
-  },
-  {
-    pizzaId: 6,
-    name: "Vegetale",
-    quantity: 1,
-    unitPrice: 13,
-    totalPrice: 13,
-  },
-  {
-    pizzaId: 11,
-    name: "Spinach and Mushroom",
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-];
-
 function CreateOrder() {
-  // const [withPriority, setWithPriority] = useState(false);
-  const cart = fakeCart;
+  //local state
+  const [withPriority, setWithPriority] =
+    useState(false);
+
+  const cart = useSelector(getCart);
   const navigation = useNavigation();
   const isSubmitting =
     navigation.state === "submitting";
@@ -52,6 +38,15 @@ function CreateOrder() {
   const username = useSelector(
     (state) => state.user.username,
   );
+  const totalCartPrice = useSelector(
+    getTotalCartPrice,
+  );
+  const priorityPrice = withPriority
+    ? totalCartPrice * 0.2
+    : 0;
+  const totalPrice =
+    totalCartPrice + priorityPrice;
+  if (!cart.length) return <EmptyCart />;
   return (
     <div className="px-4 py-6">
       <h2 className="mb-8 text-xl font-semibold">
@@ -112,8 +107,10 @@ function CreateOrder() {
             type="checkbox"
             name="priority"
             id="priority"
-            // value={withPriority}
-            // onChange={(e) => setWithPriority(e.target.checked)}
+            value={withPriority}
+            onChange={(e) =>
+              setWithPriority(e.target.checked)
+            }
             className="h-6 w-6 accent-yellow-400 focus:outline-none focus:ring focus:ring-yellow-400 focus:ring-offset-2"
           />
           <label
@@ -138,7 +135,7 @@ function CreateOrder() {
           >
             {isSubmitting
               ? "Placing order..."
-              : "Order now"}
+              : `Order now ${formatCurrency(totalPrice)}`}
           </Button>
         </div>
       </Form>
@@ -149,13 +146,13 @@ function CreateOrder() {
 export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  console.log(data);
+  
   //since we stringfy the cart object to a string
   // we need to convert it back to an object
   const order = {
     ...data,
     cart: JSON.parse(data.cart),
-    priority: data.priority === "on",
+    priority: data.priority === "true",
   };
 
   //check whether the phone number is valid or not
@@ -164,12 +161,19 @@ export async function action({ request }) {
     //we add phone property to the error object
     errors.phone =
       "Please give us your correct phone number. We may need it to contact you.";
+  // if there is any error it will be sent back to the front as a response
+  // the form will receive error as FormError
   if (Object.keys(errors).length > 0)
     return errors;
 
   const newOrder = await createOrder(order);
+  //after placed the order the cart should be empted
+  //but we cant use dispatch in regular function, that one only for react component
+  store.dispatch(clearCart());
+
   //here we need to redirect to the order/:orderId page
-  //but we cant use the useNavigate hook becaus eit can only be used inside component
+  //but we cant use the useNavigate hook because it can only be used inside component
+  //DO NOT OVERUSE
   return redirect(`/order/${newOrder.id}`);
 }
 

@@ -32,6 +32,7 @@ function Cart() {
           <CartItem
             item={item}
             key={item.pizzaId}
+           
           />
         ))}
       </ul>

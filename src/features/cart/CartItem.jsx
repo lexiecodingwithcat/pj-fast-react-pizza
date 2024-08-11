@@ -11,7 +11,7 @@ import DeleteItem from "./DeleteItem.jsx";
 import UpdateItemQuantity from "./UpdateItemQuantity.jsx";
 import { getCurrentQuantityById } from "./cartSlice.js";
 
-function CartItem({ item }) {
+function CartItem({item}) {
   const { pizzaId, name, quantity, totalPrice } =
     item;
   const currentQuantity = useSelector(
@@ -27,6 +27,7 @@ function CartItem({ item }) {
         <p className="text-sm font-bold">
           {formatCurrency(totalPrice)}
         </p>
+    
         <UpdateItemQuantity
           pizzaId={pizzaId}
           currentQuantity={currentQuantity}
