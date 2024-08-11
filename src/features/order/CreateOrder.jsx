@@ -64,42 +64,45 @@ function CreateOrder() {
             type="text"
             name="customer"
             required
-            className="input"
+            className="input grow"
             defaultValue={username}
           />
         </div>
 
-        <div>
-          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-            <label className="sm:basis-40">
-              Phone number
-            </label>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">
+            Phone number
+          </label>
+          <div className="grow">
             <input
+              className="input w-full"
               type="tel"
               name="phone"
               required
-              className="input"
             />
+            {formErrors?.phone && (
+              <p className="mt-2 rounded-md bg-red-100 p-2 text-xs text-red-700">
+                {formErrors.phone}
+              </p>
+            )}
           </div>
-          {formErrors?.phone && (
-            <p className="mb-2 mt-1 text-xs text-red-600 sm:mb-4 sm:mt-2 sm:text-sm">
-              {formErrors.phone}
-            </p>
-          )}
         </div>
 
-        <div>
-          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-            <label className="sm:basis-40">
-              Address
-            </label>
+        <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">
+            Address
+          </label>
+          <div className="grow">
             <input
               type="text"
               name="address"
               required
-              className="input"
+              className="input w-full"
             />
           </div>
+          <Button type="small">
+            Get position
+          </Button>
         </div>
 
         <div className="mb-12 flex items-center gap-4">
@@ -146,7 +149,7 @@ function CreateOrder() {
 export async function action({ request }) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData);
-  
+
   //since we stringfy the cart object to a string
   // we need to convert it back to an object
   const order = {
