@@ -1,6 +1,9 @@
 // Test ID: IIDSAT
 //eslint-diable props-type
-import { useLoaderData } from "react-router-dom";
+import {
+  useFetcher,
+  useLoaderData,
+} from "react-router-dom";
 import { getOrder } from "../../services/apiRestaurant";
 import {
   calcMinutesLeft,
@@ -8,10 +11,22 @@ import {
   formatDate,
 } from "../../utils/helpers";
 import OrderItem from "../order/OrderItem";
+import { useEffect } from "react";
 
 function Order() {
   const order = useLoaderData();
-  
+
+  // load menu data so that we can include ingredient of each pizza in the order route
+  //but without navigate to the menu route
+  const fetcher = useFetcher();
+  //we want to fetch this data when the page first loads
+  useEffect(function () {
+    //passing the name of the rout as a prama
+    //and it will also have three states as we use navigation
+    if (!fetcher.data && fetcher.state === "idle")
+      fetcher.load("/menu");
+  }, []);
+
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
     id,
@@ -61,6 +76,12 @@ function Order() {
           <OrderItem
             item={item}
             key={item.pizzaId}
+            isLoadingIngredients={fetcher.state === "loading"}
+            ingredients={
+              fetcher.data?.find(
+                (el) => el.id === item.pizzaId,
+              ).ingredients
+            }
           />
         ))}
       </ul>
