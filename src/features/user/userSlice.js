@@ -38,7 +38,7 @@ export const fetchAddress = createAsyncThunk(
 
 const initialState = {
   username: " ",
-  status: "idel",
+  status: "idle",
   position: {},
   address: "",
   error: "",
@@ -55,25 +55,24 @@ const userSlice = createSlice({
   //2. connect the reducer with Thunk and response the lifecycle of async process ( pending, fullfilled and rejected)
   extraReducers: (builder) =>
     builder
-      .addCase(
-        fetchAddress.pending,
-        (state) => (state.status = "loading"),
-      )
+      .addCase(fetchAddress.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(
         fetchAddress.fulfilled,
         (state, action) => {
           state.position =
             action.payload.position;
           state.address = action.payload.address;
-          state.status = "idel";
+          state.status = "idle";
         },
       )
       //if the user does not accept Geolocation
       .addCase(
         fetchAddress.rejected,
-        (state, action) => {
+        (state) => {
           state.status = "error";
-          state.error = action.error.message;
+          state.error = "Therewas a problem getting your location. Make sure to fill this field.";
         },
       ),
 });
