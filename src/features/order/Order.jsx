@@ -1,5 +1,5 @@
 // Test ID: IIDSAT
-//eslint-diable props-type
+
 import {
   useFetcher,
   useLoaderData,
@@ -13,6 +13,8 @@ import {
 import OrderItem from "../order/OrderItem";
 import { useEffect } from "react";
 
+import UpdatePriority from "./UpdatePriority";
+
 function Order() {
   const order = useLoaderData();
 
@@ -25,7 +27,7 @@ function Order() {
     //and it will also have three states as we use navigation
     if (!fetcher.data && fetcher.state === "idle")
       fetcher.load("/menu");
-  }, []);
+  }, [fetcher]);
 
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
@@ -76,7 +78,9 @@ function Order() {
           <OrderItem
             item={item}
             key={item.pizzaId}
-            isLoadingIngredients={fetcher.state === "loading"}
+            isLoadingIngredients={
+              fetcher.state === "loading"
+            }
             ingredients={
               fetcher.data?.find(
                 (el) => el.id === item.pizzaId,
@@ -102,7 +106,9 @@ function Order() {
             orderPrice + priorityPrice,
           )}
         </p>
+       
       </div>
+      {!priority && <UpdatePriority order={order}/>}
     </div>
   );
 }
